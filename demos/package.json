@@ -16,7 +16,7 @@
     "lucide-react": "^0.577.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-syntax-highlighter": "^15.6.1",
+    "react-syntax-highlighter": "^16.1.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.3.0"
   },
