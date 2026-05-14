@@ -32,7 +32,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"{src,test}/**/*.{ts,tsx}\" \"*.{json,md}\"",
     "format:check": "prettier --check \"{src,test}/**/*.{ts,tsx}\" \"*.{json,md}\"",
-    "prepublishOnly": "npm run format && npm run typecheck && npm run lint && npm run test && npm run build"
+    "prepublishOnly": "npm run format && npm run typecheck && npm run lint && npm run test && npm run build",
+    "prepare": "husky",
+    "husky:chmod": "chmod +x .husky/pre-commit"
   },
   "keywords": [
     "react",
@@ -59,9 +61,11 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "husky": "^9.1.7",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "jiti": "^2.7.0",
+    "lint-staged": "^17.0.4",
     "prettier": "^3.8.3",
     "ts-jest": "^29.4.9",
     "typescript": "^6.0.3"
