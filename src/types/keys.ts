@@ -4,13 +4,7 @@
 
 // Modifier keys
 export type ModifierKey =
-  | 'ctrl'
-  | 'meta'
-  | 'alt'
-  | 'shift'
-  | 'cmd'
-  | 'command'
-  | 'control';
+  'ctrl' | 'meta' | 'alt' | 'shift' | 'cmd' | 'command' | 'control';
 
 // Special keys
 export type SpecialKey =
@@ -72,16 +66,7 @@ export type LetterKey =
 
 // Number keys
 export type NumberKey =
-  | '0'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9';
+  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 
 // Function keys
 export type FunctionKey =
@@ -164,13 +149,8 @@ export type HotkeyString = `${string}+${string}` | SupportedKey | '';
 
 // Hotkey can be a single key or an array of keys, or empty string for all keys
 export type HotkeyInput =
-  | SupportedKey
-  | SupportedKey[]
-  | string
-  | string[]
-  | '';
+  SupportedKey | SupportedKey[] | string | string[] | '';
 
 // Type for useHotkeys record - keys are hotkey combinations, values are callbacks
 export type HotkeysRecord =
-  | Record<HotkeyString, HotkeyCallback>
-  | Record<string, HotkeyCallback>;
+  Record<HotkeyString, HotkeyCallback> | Record<string, HotkeyCallback>;

@@ -22,7 +22,8 @@ function App() {
                 ⌨️ useSimpleKeyboard
               </h1>
               <p className="mt-2 text-muted-foreground">
-                A simple library of React hooks for handling keyboard inputs and hotkeys
+                A simple library of React hooks for handling keyboard inputs and
+                hotkeys
               </p>
             </div>
             <div className="flex items-center gap-3">

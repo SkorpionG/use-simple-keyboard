@@ -5,6 +5,7 @@ import {
   createKeyInfo,
   type KeyEvent,
 } from '../utils/keyUtils';
+import { getDefaultTarget, type KeyboardEventTarget } from '../utils/domUtils';
 import type { HotkeyInput, HotkeyCallback } from '../types/keys';
 
 export interface UseKeySequenceOptions {
@@ -30,7 +31,7 @@ export interface UseKeySequenceOptions {
    * Target element to attach the event listener to
    * @default document
    */
-  target?: HTMLElement | Document | Window | null;
+  target?: KeyboardEventTarget;
 
   /**
    * Event type to listen for
@@ -102,7 +103,7 @@ export const useKeySequence = (
     enabled = true,
     preventDefault = true,
     stopPropagation = false,
-    target = typeof document !== 'undefined' ? document : null,
+    target = getDefaultTarget(),
     eventType = 'keydown',
     timeout = 1000,
     resetOnComplete = true,
@@ -139,10 +140,9 @@ export const useKeySequence = (
   }, [sequence]);
 
   const resetSequence = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
+    // clearTimeout is always safe to call even when no timer is active
+    clearTimeout(timeoutRef.current as unknown as number);
+    timeoutRef.current = null;
 
     setState((prev) => ({
       ...prev,
@@ -186,9 +186,10 @@ export const useKeySequence = (
         const { currentIndex } = prevState;
         const expectedKeys = sequenceRef.current[currentIndex];
 
-        if (!expectedKeys) {
-          return prevState;
-        }
+        // Defensive guard: expectedKeys should always be defined here since
+        // currentIndex is always bounded to [0, sequence.length - 1].
+        /* istanbul ignore next */
+        if (!expectedKeys) return prevState;
 
         // Check if current key matches the expected key in sequence
         const isMatch = matchesHotkey(keyEvent, expectedKeys);
@@ -229,9 +230,11 @@ export const useKeySequence = (
                 timeoutId: null,
               };
             } else {
+              // Keep matchedKeys for history but reset currentIndex to 0 so
+              // the sequence can be re-entered and re-triggered.
               return {
-                currentIndex: newIndex,
-                isActive: true,
+                currentIndex: 0,
+                isActive: false,
                 matchedKeys: newMatchedKeys,
                 timeoutId: null,
               };

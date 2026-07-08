@@ -99,6 +99,14 @@ describe('keyUtils', () => {
       });
       expect(getPlatformModifier()).toBe('ctrl');
     });
+
+    it('should return "ctrl" when navigator is undefined (SSR)', () => {
+      Object.defineProperty(global, 'navigator', {
+        value: undefined,
+        writable: true,
+      });
+      expect(getPlatformModifier()).toBe('ctrl');
+    });
   });
 
   describe('parseHotkey', () => {
@@ -254,9 +262,17 @@ describe('keyUtils', () => {
         key: 'z',
         ctrlKey: true,
         shiftKey: true,
+        metaKey: true,
+        altKey: true,
       });
       const info = createKeyInfo(event);
-      expect(info.combination).toBe('ctrl+shift+z');
+      expect(info.combination).toBe('ctrl+meta+alt+shift+z');
+      expect(info.modifiers).toEqual({
+        ctrl: true,
+        meta: true,
+        alt: true,
+        shift: true,
+      });
     });
 
     it('should normalize special keys in the combination', () => {

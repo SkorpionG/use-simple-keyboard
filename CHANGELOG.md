@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.2] - 2026-07-07
+
+### Fixed
+
+- **`useHotkeys` catch-all ordering**: Specific hotkeys now correctly take precedence over the empty string (`""`) catch-all, regardless of definition order in the record object.
+- **`useKeySequence` re-triggering**: When `resetOnComplete` is set to `false`, completing a sequence now properly resets the internal tracking index to `0` while maintaining `matchedKeys` history, allowing the sequence to be re-entered and re-triggered without unmounting.
+
 ## [0.0.1] - 2026-05-13
 
 ### Added
@@ -24,4 +31,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive test suite (72 tests, ~95% line coverage)
 - Interactive demo application (`demos/`)
 
+[0.0.2]: https://github.com/SkorpionG/use-simple-keyboard/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/SkorpionG/use-simple-keyboard/releases/tag/v0.0.1

@@ -12,6 +12,7 @@ This is an interactive demo application showcasing the features of the `useSimpl
 ### Installation
 
 1. First, build the main package:
+
 ```bash
 cd ..
 npm install
@@ -19,6 +20,7 @@ npm run build
 ```
 
 2. Then install demo dependencies:
+
 ```bash
 cd demos
 npm install
@@ -39,27 +41,32 @@ The demo will be available at `http://localhost:5173`
 The demo application includes 5 interactive examples:
 
 ### 1. 📝 Text Editor Demo
+
 - **Ctrl+S / ⌘+S**: Save content
 - **Ctrl+Z / ⌘+Z**: Undo changes
 - **Ctrl+Y / Ctrl+Shift+Z**: Redo changes
 - Features a full history system
 
 ### 2. 🪟 Modal Controls Demo
+
 - **Ctrl+M**: Open modal
 - **Escape**: Close modal
 - Demonstrates scoped hotkey handling
 
 ### 3. 🧭 Tab Navigation Demo
+
 - **Ctrl+1-4**: Jump to specific tabs
 - **← →**: Navigate between tabs
 - Shows keyboard-driven navigation patterns
 
 ### 4. 🎮 Game Controls Demo
+
 - **Space**: Start/pause game
 - **W A S D** or **Arrow Keys**: Move the player
 - Real-time keyboard input handling
 
 ### 5. ⌨️ Key Press Visualizer
+
 - Displays all keyboard inputs in real-time
 - Shows modifier keys (Ctrl, Alt, Shift, ⌘)
 - Useful for testing and debugging

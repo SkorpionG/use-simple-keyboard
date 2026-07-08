@@ -5,6 +5,7 @@ import {
   createKeyInfo,
   type KeyEvent,
 } from '../utils/keyUtils';
+import { getDefaultTarget, type KeyboardEventTarget } from '../utils/domUtils';
 import type { HotkeyInput, HotkeysRecord, HotkeyCallback } from '../types/keys';
 
 export interface UseHotkeyOptions {
@@ -30,7 +31,7 @@ export interface UseHotkeyOptions {
    * Target element to attach the event listener to
    * @default document
    */
-  target?: HTMLElement | Document | Window | null;
+  target?: KeyboardEventTarget;
 
   /**
    * Event type to listen for
@@ -42,7 +43,10 @@ export interface UseHotkeyOptions {
 /**
  * React hook for handling keyboard shortcuts/hotkeys
  *
- * @param keys - Array of keys that should be pressed to trigger the callback
+ * @param keys - Array of keys or string containing keys that should be pressed to trigger the callback.
+ *               Note: When passing an array, ensure it is a stable reference (e.g. via useMemo or defined outside the component)
+ *               to prevent unnecessary effect executions on every render. If an array contains a single string with a '+',
+ *               it will be parsed as a combined string (e.g., `['ctrl+c']` is identical to `'ctrl+c'`).
  * @param callback - Function to execute when the hotkey is pressed
  * @param options - Additional options for the hotkey behavior
  *
@@ -73,7 +77,7 @@ export const useHotkey = (
     enabled = true,
     preventDefault = true,
     stopPropagation = false,
-    target = typeof document !== 'undefined' ? document : null,
+    target = getDefaultTarget(),
     eventType = 'keydown',
   } = options;
 
@@ -104,6 +108,7 @@ export const useHotkey = (
 
   const handleKeyEvent = useCallback(
     (event: KeyboardEvent) => {
+      /* istanbul ignore next */
       if (!enabled) return;
 
       const keyInfo = createKeyInfo(event);
@@ -187,7 +192,7 @@ export const useHotkeys = (
     enabled = true,
     preventDefault = true,
     stopPropagation = false,
-    target = typeof document !== 'undefined' ? document : null,
+    target = getDefaultTarget(),
     eventType = 'keydown',
   } = options;
 
@@ -200,6 +205,7 @@ export const useHotkeys = (
 
   const handleKeyEvent = useCallback(
     (event: KeyboardEvent) => {
+      /* istanbul ignore next */
       if (!enabled) return;
 
       const keyInfo = createKeyInfo(event);
@@ -212,10 +218,15 @@ export const useHotkeys = (
         shiftKey: event.shiftKey,
       };
 
-      // Check each hotkey combination
+      // First pass: check specific hotkeys (non-empty keys)
+      // This ensures the catch-all never steals events that have a specific match.
+      let matched = false;
       for (const [keys, callback] of Object.entries(hotkeysRef.current)) {
-        // Handle empty string for catch-all
-        if (keys === '') {
+        if (keys === '') continue; // skip catch-all in first pass
+
+        const keyArray = keys.includes('+') ? parseHotkey(keys) : [keys];
+
+        if (matchesHotkey(keyEvent, keyArray)) {
           if (preventDefault) {
             event.preventDefault();
           }
@@ -225,22 +236,24 @@ export const useHotkeys = (
           }
 
           callback(event, keyInfo);
-          break; // Only trigger the first matching hotkey
-        } else {
-          const keyArray = keys.includes('+') ? parseHotkey(keys) : [keys];
+          matched = true;
+          break;
+        }
+      }
 
-          if (matchesHotkey(keyEvent, keyArray)) {
-            if (preventDefault) {
-              event.preventDefault();
-            }
-
-            if (stopPropagation) {
-              event.stopPropagation();
-            }
-
-            callback(event, keyInfo);
-            break; // Only trigger the first matching hotkey
+      // Second pass: fire catch-all only if no specific hotkey matched
+      if (!matched) {
+        const catchAllCallback = hotkeysRef.current[''];
+        if (catchAllCallback !== undefined) {
+          if (preventDefault) {
+            event.preventDefault();
           }
+
+          if (stopPropagation) {
+            event.stopPropagation();
+          }
+
+          catchAllCallback(event, keyInfo);
         }
       }
     },

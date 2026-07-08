@@ -26,6 +26,7 @@ const config: Config = {
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
   verbose: true,
+  watchman: false,
 };
 
 export default config;

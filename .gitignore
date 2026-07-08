@@ -146,3 +146,4 @@ vite.config.ts.timestamp-*
 .DS_Store
 .Thumbs.db
 .specstory/
+TODO.md

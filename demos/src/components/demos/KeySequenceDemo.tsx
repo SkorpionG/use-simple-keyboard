@@ -48,6 +48,15 @@ export function KeySequenceDemo() {
   const [lastCompleted, setLastCompleted] = useState<string>('');
   const [showReward, setShowReward] = useState(false);
 
+  const handleSequenceComplete = (sequence: (typeof sequences)[0]) => {
+    if (!completedSequences.includes(sequence.id)) {
+      setCompletedSequences((prev) => [...prev, sequence.id]);
+    }
+    setLastCompleted(sequence.reward);
+    setShowReward(true);
+    setTimeout(() => setShowReward(false), 3000);
+  };
+
   // Track each sequence
   const konamiState = useKeySequence(
     sequences[0].keys,
@@ -75,15 +84,6 @@ export function KeySequenceDemo() {
 
   const states = [konamiState, secretState, hotkeyState, quickState];
 
-  const handleSequenceComplete = (sequence: (typeof sequences)[0]) => {
-    if (!completedSequences.includes(sequence.id)) {
-      setCompletedSequences((prev) => [...prev, sequence.id]);
-    }
-    setLastCompleted(sequence.reward);
-    setShowReward(true);
-    setTimeout(() => setShowReward(false), 3000);
-  };
-
   const getProgress = (sequenceIndex: number) => {
     const state = states[sequenceIndex];
     const sequence = sequences[sequenceIndex];
@@ -101,7 +101,7 @@ export function KeySequenceDemo() {
     isActive: boolean
   ) => {
     return keys.map((key, index) => {
-      let displayKey = key;
+      let displayKey: string;
 
       // Format display for special keys
       if (key.startsWith('arrow')) {
